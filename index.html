@@ -1,0 +1,2196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeSaver - Blood Donor Network</title>
+    <style>
+        :root {
+            --primary-color: #dc2626;
+            --secondary-color: #991b1b;
+            --accent-color: #fef2f2;
+            --success-color: #16a34a;
+            --warning-color: #ea580c;
+            --info-color: #0284c7;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--light-color);
+            color: var(--dark-color);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info-color);
+            color: white;
+        }
+
+        /* Search Filters */
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--accent-color);
+            border-radius: 0.5rem;
+        }
+
+        /* Donor Grid */
+        .donor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .donor-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+            position: relative;
+        }
+
+        .donor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .donor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .donor-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .blood-type {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .donor-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .donor-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-icon {
+            width: 1rem;
+            height: 1rem;
+            color: var(--primary-color);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-unavailable {
+            background: #6b7280;
+            color: white;
+        }
+
+        .status-emergency {
+            background: var(--warning-color);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Blood Bank */
+        .blood-bank-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .blood-type-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .blood-type-card:hover {
+            transform: scale(1.05);
+        }
+
+        .blood-type-large {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .blood-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .blood-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+        }
+
+        .status-high {
+            background: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .status-medium {
+            background: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .status-low {
+            background: #fee2e2;
+            color: var(--primary-color);
+        }
+
+        .status-critical {
+            background: var(--primary-color);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        /* Messages */
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .message-success {
+            background: #dcfce7;
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .message-error {
+            background: #fee2e2;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .message-info {
+            background: #dbeafe;
+            color: var(--info-color);
+            border-left: 4px solid var(--info-color);
+        }
+
+        /* Emergency Banner */
+        .emergency-banner {
+            background: linear-gradient(135deg, var(--warning-color), #dc2626);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            animation: pulse 3s infinite;
+        }
+
+        .emergency-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+
+            .donor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .blood-bank-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .modal-close:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                🩸 LifeSaver
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="showTab('dashboard')">Dashboard</li>
+                <li class="nav-item" onclick="showTab('register')">Register</li>
+                <li class="nav-item" onclick="showTab('search')">Find Donors</li>
+                <li class="nav-item" onclick="showTab('blood-bank')">Blood Bank</li>
+                <li class="nav-item" onclick="showTab('emergency')">Emergency</li>
+                <li class="nav-item" onclick="showTab('profile')">My Profile</li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="emergency-banner">
+                <div class="emergency-title">🚨 Emergency Blood Needed!</div>
+                <div>O- blood urgently needed at City Hospital. Contact: +1-555-EMERGENCY</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="total-donors">0</span>
+                    <div class="stat-label">Total Donors</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="available-donors">0</span>
+                    <div class="stat-label">Available Now</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="emergency-donors">0</span>
+                    <div class="stat-label">Emergency Ready</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="cities-covered">0</span>
+                    <div class="stat-label">Cities Covered</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Recent Activity</div>
+                </div>
+                <div id="recent-activity">
+                    <div class="message message-info">Welcome to LifeSaver! Start by registering as a donor or searching
+                        for donors in your area.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Tab -->
+        <div id="register" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">➕</div>
+                    <div class="card-title">Register as Blood Donor</div>
+                </div>
+                <div id="register-message"></div>
+                <form id="donor-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-input" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Blood Group *</label>
+                            <select class="form-select" name="bloodGroup" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-input" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Age *</label>
+                            <input type="number" class="form-input" name="age" min="18" max="65" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender *</label>
+                            <select class="form-select" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">City *</label>
+                            <input type="text" class="form-input" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State/Province</label>
+                            <input type="text" class="form-input" name="state">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Weight (kg) *</label>
+                            <input type="number" class="form-input" name="weight" min="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Donation Date</label>
+                            <input type="date" class="form-input" name="lastDonation">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Medical Conditions (if any)</label>
+                        <textarea class="form-textarea" name="medicalConditions"
+                            placeholder="List any medical conditions or medications"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="availability" id="availability">
+                        <label for="availability">Available for donation now</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="emergencyContact" id="emergencyContact">
+                        <label for="emergencyContact">Available for emergency calls</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="notifications" id="notifications" checked>
+                        <label for="notifications">Receive donation reminders</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span>Register as Donor</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search Tab -->
+        <div id="search" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">Find Blood Donors</div>
+                </div>
+
+                <div class="search-filters">
+                    <div class="form-group">
+                        <label class="form-label">Blood Group</label>
+                        <select class="form-select" id="search-blood-group">
+                            <option value="">All Blood Groups</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-input" id="search-city" placeholder="Enter city name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Availability</label>
+                        <select class="form-select" id="search-availability">
+                            <option value="">All Donors</option>
+                            <option value="available">Available Now</option>
+                            <option value="emergency">Emergency Ready</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" id="search-gender">
+                            <option value="">All Genders</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="searchDonors()">
+                        🔍 Search Donors
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearSearch()">
+                        🔄 Clear Filters
+                    </button>
+                    <button class="btn btn-warning" onclick="exportResults()">
+                        📥 Export Results
+                    </button>
+                </div>
+
+                <div id="search-results">
+                    <div class="message message-info">Use the filters above to search for blood donors in your area.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blood Bank Tab -->
+        <div id="blood-bank" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🏥</div>
+                    <div class="card-title">Blood Bank Inventory</div>
+                </div>
+
+                <div class="blood-bank-grid" id="blood-bank-inventory">
+                    <!-- Blood type cards will be generated here -->
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-info" onclick="updateInventory()">
+                        🔄 Refresh Inventory
+                    </button>
+                    <button class="btn btn-warning" onclick="requestBlood()">
+                        📞 Request Blood
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Tab -->
+        <div id="emergency" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🚨</div>
+                    <div class="card-title">Emergency Blood Request</div>
+                </div>
+
+                <div id="emergency-message"></div>
+
+                <form id="emergency-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Patient Name *</label>
+                            <input type="text" class="form-input" name="patientName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Blood Group Needed *</label>
+                            <select class="form-select" name="bloodGroupNeeded" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Units Needed *</label>
+                            <input type="number" class="form-input" name="unitsNeeded" min="1" max="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hospital/Clinic *</label>
+                            <input type="text" class="form-input" name="hospital" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Person *</label>
+                            <input type="text" class="form-input" name="contactPerson" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Phone *</label>
+                            <input type="tel" class="form-input" name="contactPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">City *</label>
+                            <input type="text" class="form-input" name="emergencyCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Urgency Level *</label>
+                            <select class="form-select" name="urgencyLevel" required>
+                                <option value="">Select Urgency</option>
+                                <option value="Critical">Critical (within 2 hours)</option>
+                                <option value="Urgent">Urgent (within 6 hours)</option>
+                                <option value="Moderate">Moderate (within 24 hours)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Additional Details</label>
+                        <textarea class="form-textarea" name="additionalDetails"
+                            placeholder="Provide any additional information about the emergency"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="background: var(--warning-color);">
+                        🚨 Submit Emergency Request
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📋</div>
+                    <div class="card-title">Active Emergency Requests</div>
+                </div>
+                <div id="emergency-requests">
+                    <div class="message message-info">No active emergency requests at the moment.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👤</div>
+                    <div class="card-title">My Donor Profile</div>
+                </div>
+                <div id="profile-content">
+                    <div class="message message-info">You haven't registered as a donor yet. <a href="#"
+                            onclick="showTab('register')"
+                            style="color: var(--primary-color); text-decoration: underline;">Register now</a> to create
+                        your profile.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Blood Request -->
+    <div id="request-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">×</span>
+            <h2>Request Blood</h2>
+            <p>Contact the blood bank directly for blood requests:</p>
+            <div style="margin-top: 1rem;">
+                <strong>Emergency Hotline:</strong> +1-555-BLOOD<br>
+                <strong>Email:</strong> emergency@lifesaver
+                <strong>Email:</strong> emergency@lifesaver.com<br>
+                <strong>Available:</strong> 24/7
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let donors = [];
+        let emergencyRequests = [];
+        let currentUser = null;
+        let bloodInventory = {
+            'A+': { count: 45, status: 'high' },
+            'A-': { count: 12, status: 'medium' },
+            'B+': { count: 38, status: 'high' },
+            'B-': { count: 8, status: 'low' },
+            'AB+': { count: 15, status: 'medium' },
+            'AB-': { count: 3, status: 'critical' },
+            'O+': { count: 52, status: 'high' },
+            'O-': { count: 6, status: 'critical' }
+        };
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function () {
+            loadData();
+            updateDashboard();
+            updateBloodBank();
+            setupEventListeners();
+            addSampleData();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('donor-form').addEventListener('submit', handleDonorRegistration);
+            document.getElementById('emergency-form').addEventListener('submit', handleEmergencyRequest);
+
+            // Real-time search
+            document.getElementById('search-blood-group').addEventListener('change', searchDonors);
+            document.getElementById('search-city').addEventListener('input', debounce(searchDonors, 300));
+            document.getElementById('search-availability').addEventListener('change', searchDonors);
+            document.getElementById('search-gender').addEventListener('change', searchDonors);
+        }
+
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Tab navigation
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked nav item
+            event.target.classList.add('active');
+
+            // Update content based on tab
+            if (tabName === 'profile') {
+                updateProfile();
+            } else if (tabName === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const storedDonors = localStorage.getItem('lifesaver_donors');
+            const storedRequests = localStorage.getItem('lifesaver_emergency_requests');
+            const storedUser = localStorage.getItem('lifesaver_current_user');
+            const storedInventory = localStorage.getItem('lifesaver_blood_inventory');
+
+            if (storedDonors) {
+                donors = JSON.parse(storedDonors);
+            }
+
+            if (storedRequests) {
+                emergencyRequests = JSON.parse(storedRequests);
+            }
+
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            }
+
+            if (storedInventory) {
+                bloodInventory = JSON.parse(storedInventory);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('lifesaver_donors', JSON.stringify(donors));
+            localStorage.setItem('lifesaver_emergency_requests', JSON.stringify(emergencyRequests));
+            localStorage.setItem('lifesaver_current_user', JSON.stringify(currentUser));
+            localStorage.setItem('lifesaver_blood_inventory', JSON.stringify(bloodInventory));
+        }
+
+        // Handle donor registration
+        function handleDonorRegistration(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const donor = {
+                id: Date.now().toString(),
+                fullName: formData.get('fullName').trim(),
+                bloodGroup: formData.get('bloodGroup'),
+                phone: formData.get('phone').trim(),
+                email: formData.get('email').trim(),
+                age: parseInt(formData.get('age')),
+                gender: formData.get('gender'),
+                city: formData.get('city').trim(),
+                state: formData.get('state').trim(),
+                weight: parseInt(formData.get('weight')),
+                lastDonation: formData.get('lastDonation'),
+                medicalConditions: formData.get('medicalConditions').trim(),
+                availability: formData.get('availability') === 'on',
+                emergencyContact: formData.get('emergencyContact') === 'on',
+                notifications: formData.get('notifications') === 'on',
+                registrationDate: new Date().toISOString(),
+                donationCount: 0,
+                lastActive: new Date().toISOString()
+            };
+
+            // Validate donor data
+            const validation = validateDonorData(donor);
+            if (!validation.isValid) {
+                showMessage('register-message', validation.message, 'error');
+                return;
+            }
+
+            // Check for duplicate phone
+            const existingDonor = donors.find(d => d.phone === donor.phone);
+            if (existingDonor) {
+                showMessage('register-message', 'A donor with this phone number already exists.', 'error');
+                return;
+            }
+
+            // Save donor
+            donors.push(donor);
+            currentUser = donor;
+            saveData();
+
+            // Show success message
+            showMessage('register-message', 'Registration successful! Welcome to LifeSaver community.', 'success');
+
+            // Reset form
+            e.target.reset();
+
+            // Update dashboard and profile
+            updateDashboard();
+            addActivity(`New donor registered: ${donor.fullName} (${donor.bloodGroup})`);
+
+            // Auto-switch to profile tab after 2 seconds
+            setTimeout(() => {
+                showTab('profile');
+            }, 2000);
+        }
+
+        // Validate donor data
+        function validateDonorData(donor) {
+            if (!donor.fullName || donor.fullName.length < 2) {
+                return { isValid: false, message: 'Please enter a valid full name (at least 2 characters).' };
+            }
+
+            if (!donor.bloodGroup) {
+                return { isValid: false, message: 'Please select a blood group.' };
+            }
+
+            if (!donor.phone || !isValidPhone(donor.phone)) {
+                return { isValid: false, message: 'Please enter a valid phone number.' };
+            }
+
+            if (donor.age < 18 || donor.age > 65) {
+                return { isValid: false, message: 'Donor age must be between 18 and 65 years.' };
+            }
+
+            if (!donor.gender) {
+                return { isValid: false, message: 'Please select gender.' };
+            }
+
+            if (!donor.city || donor.city.length < 2) {
+                return { isValid: false, message: 'Please enter a valid city name.' };
+            }
+
+            if (donor.weight < 50) {
+                return { isValid: false, message: 'Minimum weight requirement is 50 kg for blood donation.' };
+            }
+
+            if (donor.email && !isValidEmail(donor.email)) {
+                return { isValid: false, message: 'Please enter a valid email address.' };
+            }
+
+            // Check last donation date
+            if (donor.lastDonation) {
+                const lastDonationDate = new Date(donor.lastDonation);
+                const threeMonthsAgo = new Date();
+                threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+                if (lastDonationDate > threeMonthsAgo) {
+                    return { isValid: false, message: 'You must wait at least 3 months between donations.' };
+                }
+            }
+
+            return { isValid: true };
+        }
+
+        // Validate phone number
+        function isValidPhone(phone) {
+            const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,15}$/;
+            const digitsOnly = phone.replace(/\D/g, '');
+            return phoneRegex.test(phone) && digitsOnly.length >= 10;
+        }
+
+        // Validate email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Search donors
+        function searchDonors() {
+            const bloodGroup = document.getElementById('search-blood-group').value;
+            const city = document.getElementById('search-city').value.toLowerCase().trim();
+            const availability = document.getElementById('search-availability').value;
+            const gender = document.getElementById('search-gender').value;
+
+            let filteredDonors = [...donors];
+
+            // Filter by blood group
+            if (bloodGroup) {
+                filteredDonors = filteredDonors.filter(donor => donor.bloodGroup === bloodGroup);
+            }
+
+            // Filter by city
+            if (city) {
+                filteredDonors = filteredDonors.filter(donor =>
+                    donor.city.toLowerCase().includes(city) ||
+                    (donor.state && donor.state.toLowerCase().includes(city))
+                );
+            }
+
+            // Filter by availability
+            if (availability === 'available') {
+                filteredDonors = filteredDonors.filter(donor => donor.availability);
+            } else if (availability === 'emergency') {
+                filteredDonors = filteredDonors.filter(donor => donor.emergencyContact);
+            }
+
+            // Filter by gender
+            if (gender) {
+                filteredDonors = filteredDonors.filter(donor => donor.gender === gender);
+            }
+
+            displaySearchResults(filteredDonors);
+            addActivity(`Search performed: ${filteredDonors.length} donors found`);
+        }
+
+        // Display search results
+        function displaySearchResults(results) {
+            const container = document.getElementById('search-results');
+
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div class="message message-info">
+                        No donors found matching your search criteria. Try adjusting your filters or 
+                        <a href="#" onclick="showTab('emergency')" style="color: var(--primary-color);">create an emergency request</a>.
+                    </div>
+                `;
+                return;
+            }
+
+            const donorCards = results.map(donor => createDonorCard(donor)).join('');
+            container.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <strong>${results.length}</strong> donor(s) found
+                </div>
+                <div class="donor-grid">${donorCards}</div>
+            `;
+        }
+
+        // Create donor card
+        function createDonorCard(donor) {
+            const lastDonation = donor.lastDonation ?
+                `Last donation: ${formatDate(donor.lastDonation)}` :
+                'First time donor';
+
+            const statusClass = donor.emergencyContact ? 'status-emergency' :
+                donor.availability ? 'status-available' : 'status-unavailable';
+
+            const statusText = donor.emergencyContact ? 'Emergency Ready' :
+                donor.availability ? 'Available' : 'Not Available';
+
+            const donationHistory = donor.donationCount > 0 ?
+                `<div class="donor-detail">
+                    <span class="detail-icon">🩸</span>
+                    <span>Donations: ${donor.donationCount}</span>
+                </div>` : '';
+
+            return `
+                <div class="donor-card">
+                    <div class="status-badge ${statusClass}">${statusText}</div>
+                    <div class="donor-header">
+                        <div class="donor-name">${escapeHtml(donor.fullName)}</div>
+                        <div class="blood-type">${donor.bloodGroup}</div>
+                    </div>
+                    <div class="donor-details">
+                        <div class="donor-detail">
+                            <span class="detail-icon">📍</span>
+                            <span>${escapeHtml(donor.city)}${donor.state ? ', ' + escapeHtml(donor.state) : ''}</span>
+                        </div>
+                        <div class="donor-detail">
+                            <span class="detail-icon">📞</span>
+                            <span>${escapeHtml(donor.phone)}</span>
+                        </div>
+                        ${donor.email ? `
+                        <div class="donor-detail">
+                            <span class="detail-icon">✉️</span>
+                            <span>${escapeHtml(donor.email)}</span>
+                        </div>` : ''}
+                        <div class="donor-detail">
+                            <span class="detail-icon">👤</span>
+                            <span>${donor.gender}, ${donor.age} years, ${donor.weight}kg</span>
+                        </div>
+                        ${donationHistory}
+                        <div class="donor-detail">
+                            <span class="detail-icon">📅</span>
+                            <span>${lastDonation}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="contactDonor('${donor.id}')" style="flex: 1; padding: 0.5rem;">
+                            📞 Contact
+                        </button>
+                        <button class="btn btn-info" onclick="viewDonorProfile('${donor.id}')" style="flex: 1; padding: 0.5rem;">
+                            👤 Profile
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Contact donor
+        function contactDonor(donorId) {
+            const donor = donors.find(d => d.id === donorId);
+            if (donor) {
+                const message = `Contact ${donor.fullName}:\n\nPhone: ${donor.phone}${donor.email ? '\nEmail: ' + donor.email : ''}`;
+                alert(message);
+                addActivity(`Contact initiated with ${donor.fullName}`);
+            }
+        }
+
+        // View donor profile
+        function viewDonorProfile(donorId) {
+            const donor = donors.find(d => d.id === donorId);
+            if (donor) {
+                const profile = `
+                    Donor Profile - ${donor.fullName}
+                    
+                    Blood Group: ${donor.bloodGroup}
+                    Age: ${donor.age} years
+                    Gender: ${donor.gender}
+                    Weight: ${donor.weight} kg
+                    Location: ${donor.city}${donor.state ? ', ' + donor.state : ''}
+                    
+                    Contact:
+                    Phone: ${donor.phone}
+                    ${donor.email ? 'Email: ' + donor.email : ''}
+                    
+                    Donation History: ${donor.donationCount} donations
+                    Last Donation: ${donor.lastDonation ? formatDate(donor.lastDonation) : 'First time donor'}
+                    
+                    Availability: ${donor.availability ? 'Available now' : 'Not available'}
+                    Emergency Contact: ${donor.emergencyContact ? 'Yes' : 'No'}
+                    
+                    Registered: ${formatDate(donor.registrationDate)}
+                `;
+                alert(profile);
+            }
+        }
+
+        // Handle emergency request
+        function handleEmergencyRequest(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const request = {
+                id: Date.now().toString(),
+                patientName: formData.get('patientName').trim(),
+                bloodGroupNeeded: formData.get('bloodGroupNeeded'),
+                unitsNeeded: parseInt(formData.get('unitsNeeded')),
+                hospital: formData.get('hospital').trim(),
+                contactPerson: formData.get('contactPerson').trim(),
+                contactPhone: formData.get('contactPhone').trim(),
+                city: formData.get('emergencyCity').trim(),
+                urgencyLevel: formData.get('urgencyLevel'),
+                additionalDetails: formData.get('additionalDetails').trim(),
+                requestDate: new Date().toISOString(),
+                status: 'Active'
+            };
+
+            // Validate emergency request
+            if (!request.patientName || !request.bloodGroupNeeded || !request.hospital ||
+                !request.contactPerson || !request.contactPhone || !request.city || !request.urgencyLevel) {
+                showMessage('emergency-message', 'Please fill in all required fields.', 'error');
+                return;
+            }
+
+            if (!isValidPhone(request.contactPhone)) {
+                showMessage('emergency-message', 'Please enter a valid contact phone number.', 'error');
+                return;
+            }
+
+            // Save emergency request
+            emergencyRequests.push(request);
+            saveData();
+
+            // Show success message
+            showMessage('emergency-message', 'Emergency request submitted successfully! We will notify matching donors immediately.', 'success');
+
+            // Reset form
+            e.target.reset();
+
+            // Update emergency requests display
+            updateEmergencyRequests();
+            addActivity(`Emergency request: ${request.bloodGroupNeeded} blood needed for ${request.patientName}`);
+
+            // Notify matching donors (simulation)
+            notifyMatchingDonors(request);
+        }
+
+        // Notify matching donors
+        function notifyMatchingDonors(request) {
+            const matchingDonors = donors.filter(donor =>
+                donor.bloodGroup === request.bloodGroupNeeded &&
+                donor.city.toLowerCase() === request.city.toLowerCase() &&
+                donor.emergencyContact
+            );
+
+            if (matchingDonors.length > 0) {
+                setTimeout(() => {
+                    alert(`Emergency notification sent to ${matchingDonors.length} matching donors in ${request.city}!`);
+                }, 1000);
+            }
+        }
+
+        // Update emergency requests display
+        function updateEmergencyRequests() {
+            const container = document.getElementById('emergency-requests');
+            const activeRequests = emergencyRequests.filter(req => req.status === 'Active');
+
+            if (activeRequests.length === 0) {
+                container.innerHTML = '<div class="message message-info">No active emergency requests at the moment.</div>';
+                return;
+            }
+
+            const requestCards = activeRequests.map(request => `
+                <div class="donor-card" style="border-left-color: var(--warning-color);">
+                    <div class="status-badge status-emergency">${request.urgencyLevel}</div>
+                    <div class="donor-header">
+                        <div class="donor-name">Patient: ${escapeHtml(request.patientName)}</div>
+                        <div class="blood-type">${request.bloodGroupNeeded}</div>
+                    </div>
+                    <div class="donor-details">
+                        <div class="donor-detail">
+                            <span class="detail-icon">🏥</span>
+                            <span>${escapeHtml(request.hospital)}</span>
+                        </div>
+                        <div class="donor-detail">
+                            <span class="detail-icon">📍</span>
+                            <span>${escapeHtml(request.city)}</span>
+                        </div>
+                        <div class="donor-detail">
+                            <span class="detail-icon">🩸</span>
+                            <span>${request.unitsNeeded} units needed</span>
+                        </div>
+                        <div class="donor-detail">
+                            <span class="detail-icon">👤</span>
+                            <span>${escapeHtml(request.contactPerson)}</span>
+                        </div>
+                        <div class="donor-detail">
+                            <span class="detail-icon">📞</span>
+                            <span>${escapeHtml(request.contactPhone)}</span>
+                        </div>
+                        <div class="donor-detail">
+                            <span class="detail-icon">📅</span>
+                            <span>${formatDate(request.requestDate)}</span>
+                        </div>
+                    </div>
+                    ${request.additionalDetails ? `
+                    <div style="margin-top: 1rem; padding: 0.5rem; background: var(--accent-color); border-radius: 0.5rem; font-size: 0.9rem;">
+                        ${escapeHtml(request.additionalDetails)}
+                    </div>` : ''}
+                </div>
+            `).join('');
+
+            container.innerHTML = requestCards;
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const totalDonors = donors.length;
+            const availableDonors = donors.filter(d => d.availability).length;
+            const emergencyDonors = donors.filter(d => d.emergencyContact).length;
+            const cities = new Set(donors.map(d => d.city.toLowerCase())).size;
+
+            document.getElementById('total-donors').textContent = totalDonors;
+            document.getElementById('available-donors').textContent = availableDonors;
+            document.getElementById('emergency-donors').textContent = emergencyDonors;
+            document.getElementById('cities-covered').textContent = cities;
+
+            updateEmergencyRequests();
+        }
+
+        // Update blood bank inventory
+        function updateBloodBank() {
+            const container = document.getElementById('blood-bank-inventory');
+            const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+            const cards = bloodTypes.map(type => {
+                const inventory = bloodInventory[type];
+                const statusClass = `status-${inventory.status}`;
+                const statusText = inventory.status.charAt(0).toUpperCase() + inventory.status.slice(1);
+
+                return `
+                    <div class="blood-type-card">
+                        <div class="blood-type-large">${type}</div>
+                        <div class="blood-count">${inventory.count}</div>
+                        <div class="blood-status ${statusClass}">${statusText}</div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = cards;
+        }
+
+        // Update inventory (simulation)
+        function updateInventory() {
+            Object.keys(bloodInventory).forEach(type => {
+                const change = Math.floor(Math.random() * 10) - 5; // Random change between -5 and +4
+                bloodInventory[type].count = Math.max(0, bloodInventory[type].count + change);
+
+                // Update status based on count
+                if (bloodInventory[type].count >= 40) {
+                    bloodInventory[type].status = 'high';
+                } else if (bloodInventory[type].count >= 20) {
+                    bloodInventory[type].status = 'medium';
+                } else if (bloodInventory[type].count >= 10) {
+                    bloodInventory[type].status = 'low';
+                } else {
+                    bloodInventory[type].status = 'critical';
+                }
+            });
+
+            saveData();
+            updateBloodBank();
+            addActivity('Blood bank inventory updated');
+        }
+
+        // Request blood modal
+        function requestBlood() {
+            document.getElementById('request-modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('request-modal').style.display = 'none';
+        }
+
+        // Update profile
+        function updateProfile() {
+            const container = document.getElementById('profile-content');
+
+            if (!currentUser) {
+                container.innerHTML = `
+                    <div class="message message-info">
+                        You haven't registered as a donor yet. 
+                        <a href="#" onclick="showTab('register')" style="color: var(--primary-color); text-decoration: underline;">Register now</a> 
+                        to create your profile.
+                    </div>
+                `;
+                return;
+            }
+
+            const profile = `
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <div class="form-input" style="background: var(--light-color);">${escapeHtml(currentUser.fullName)}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Blood Group</label>
+                        <div class="form-input" style="background: var(--light-color);">${currentUser.bloodGroup}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <div class="form-input" style="background: var(--light-color);">${escapeHtml(currentUser.phone)}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <div class="form-input" style="background: var(--light-color);">${escapeHtml(currentUser.email || 'Not provided')}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Age</label>
+                        <div class="form-input" style="background: var(--light-color);">${currentUser.age} years</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <div class="form-input" style="background: var(--light-color);">${currentUser.gender}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <div class="form-input" style="background: var(--light-color);">${escapeHtml(currentUser.city)}${currentUser.state ? ', ' + escapeHtml(currentUser.state) : ''}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Weight</label>
+                        <div class="form-input" style="background: var(--light-color);">${currentUser.weight} kg</div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid" style="margin: 2rem 0;">
+                    <div class="stat-card">
+                        <span class="stat-number">${currentUser.donationCount}</span>
+                        <div class="stat-label">Total Donations</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">${currentUser.lastDonation ? formatDate(currentUser.lastDonation) : 'Never'}</span>
+                        <div class="stat-label">Last Donation</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">${currentUser.availability ? 'Yes' : 'No'}</span>
+                        <div class="stat-label">Available Now</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">${currentUser.emergencyContact ? 'Yes' : 'No'}</span>
+                        <div class="stat-label">Emergency Ready</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="editProfile()">✏️ Edit Profile</button>
+                    <button class="btn btn-success" onclick="recordDonation()">🩸 Record Donation</button>
+                    <button class="btn btn-info" onclick="toggleAvailability()">🔄 Toggle Availability</button>
+                    <button class="btn btn-warning" onclick="deleteProfile()">🗑️ Delete Profile</button>
+                </div>
+            `;
+
+            container.innerHTML = profile;
+        }
+
+        // Profile actions
+        function editProfile() {
+            alert('Edit profile functionality would open a form to update donor information.');
+        }
+
+        function recordDonation() {
+            if (currentUser) {
+                currentUser.donationCount++;
+                currentUser.lastDonation = new Date().toISOString().split('T')[0];
+
+                // Update in donors array
+                const index = donors.findIndex(d => d.id === currentUser.id);
+                if (index !== -1) {
+                    donors[index] = currentUser;
+                }
+
+                saveData();
+                updateProfile();
+                updateDashboard();
+                addActivity(`Donation recorded for ${currentUser.fullName}`);
+                alert('Donation recorded successfully! Thank you for saving lives.');
+            }
+        }
+
+        function toggleAvailability() {
+            if (currentUser) {
+                currentUser.availability = !currentUser.availability;
+
+                // Update in donors array
+                const index = donors.findIndex(d => d.id === currentUser.id);
+                if (index !== -1) {
+                    donors[index] = currentUser;
+                }
+
+                saveData();
+                updateProfile();
+                updateDashboard();
+                addActivity(`Availability updated for ${currentUser.fullName}`);
+            }
+        }
+
+        function deleteProfile() {
+            if (currentUser && confirm('Are you sure you want to delete your donor profile? This action cannot be undone.')) {
+                donors = donors.filter(d => d.id !== currentUser.id);
+                currentUser = null;
+                saveData();
+                updateProfile();
+                updateDashboard();
+                addActivity('Donor profile deleted');
+                alert('Your profile has been deleted successfully.');
+            }
+        }
+
+        // Clear search filters
+        function clearSearch() {
+            document.getElementById('search-blood-group').value = '';
+            document.getElementById('search-city').value = '';
+            document.getElementById('search-availability').value = '';
+            document.getElementById('search-gender').value = '';
+
+            document.getElementById('search-results').innerHTML = `
+                <div class="message message-info">Use the filters above to search for blood donors in your area.</div>
+            `;
+        }
+
+        // Export search results
+        function exportResults() {
+            const results = document.getElementById('search-results');
+            if (results.querySelector('.donor-grid')) {
+                const donorCards = results.querySelectorAll('.donor-card');
+                let exportData = 'Blood Donor Search Results\n\n';
+
+                donorCards.forEach((card, index) => {
+                    const name = card.querySelector('.donor-name').textContent;
+                    const bloodType = card.querySelector('.blood-type').textContent;
+                    const details = Array.from(card.querySelectorAll('.donor-detail')).map(detail =>
+                        detail.textContent.trim()
+                    ).join(', ');
+
+                    exportData += `${index + 1}. ${name} (${bloodType})\n   ${details}\n\n`;
+                });
+
+                const blob = new Blob([exportData], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'blood_donors_search_results.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                addActivity('Search results exported');
+            } else {
+                alert('No search results to export. Please perform a search first.');
+            }
+        }
+
+        // Add activity to recent activity log
+        function addActivity(activity) {
+            const container = document.getElementById('recent-activity');
+            const timestamp = new Date().toLocaleString();
+
+            const activityItem = document.createElement('div');
+            activityItem.className = 'message message-info';
+            activityItem.style.marginBottom = '0.5rem';
+            activityItem.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>${escapeHtml(activity)}</span>
+                    <small style="color: #6b7280;">${timestamp}</small>
+                </div>
+            `;
+
+            // Insert at the beginning
+            if (container.firstChild && container.firstChild.classList && container.firstChild.classList.contains('message-info')) {
+                container.insertBefore(activityItem, container.firstChild);
+            } else {
+                container.innerHTML = '';
+                container.appendChild(activityItem);
+            }
+
+            // Keep only last 10 activities
+            const activities = container.querySelectorAll('.message');
+            if (activities.length > 10) {
+                for (let i = 10; i < activities.length; i++) {
+                    activities[i].remove();
+                }
+            }
+        }
+
+        // Show message helper
+        function showMessage(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            const messageClass = `message-${type}`;
+
+            container.innerHTML = `
+                <div class="message ${messageClass}">
+                    ${escapeHtml(message)}
+                </div>
+            `;
+
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Add sample data for demonstration
+        function addSampleData() {
+            // Only add sample data if no donors exist
+            if (donors.length === 0) {
+                const sampleDonors = [
+                    {
+                        id: '1',
+                        fullName: 'John Smith',
+                        bloodGroup: 'O+',
+                        phone: '+1-555-0101',
+                        email: 'john.smith@email.com',
+                        age: 28,
+                        gender: 'Male',
+                        city: 'New York',
+                        state: 'NY',
+                        weight: 75,
+                        lastDonation: '2024-01-15',
+                        medicalConditions: '',
+                        availability: true,
+                        emergencyContact: true,
+                        notifications: true,
+                        registrationDate: '2024-01-01T00:00:00.000Z',
+                        donationCount: 5,
+                        lastActive: new Date().toISOString()
+                    },
+                    {
+                        id: '2',
+                        fullName: 'Sarah Johnson',
+                        bloodGroup: 'A+',
+                        phone: '+1-555-0102',
+                        email: 'sarah.johnson@email.com',
+                        age: 32,
+                        gender: 'Female',
+                        city: 'Los Angeles',
+                        state: 'CA',
+                        weight: 65,
+                        lastDonation: '2024-02-20',
+                        medicalConditions: '',
+                        availability: true,
+                        emergencyContact: false,
+                        notifications: true,
+                        registrationDate: '2024-01-05T00:00:00.000Z',
+                        donationCount: 3,
+                        lastActive: new Date().toISOString()
+                    },
+                    {
+                        id: '3',
+                        fullName: 'Michael Brown',
+                        bloodGroup: 'B-',
+                        phone: '+1-555-0103',
+                        email: 'michael.brown@email.com',
+                        age: 25,
+                        gender: 'Male',
+                        city: 'Chicago',
+                        state: 'IL',
+                        weight: 80,
+                        lastDonation: '',
+                        medicalConditions: '',
+                        availability: false,
+                        emergencyContact: true,
+                        notifications: true,
+                        registrationDate: '2024-02-01T00:00:00.000Z',
+                        donationCount: 0,
+                        lastActive: new Date().toISOString()
+                    },
+                    {
+                        id: '4',
+                        fullName: 'Emily Davis',
+                        bloodGroup: 'AB+',
+                        phone: '+1-555-0104',
+                        email: 'emily.davis@email.com',
+                        age: 29,
+                        gender: 'Female',
+                        city: 'Houston',
+                        state: 'TX',
+                        weight: 58,
+                        lastDonation: '2024-03-10',
+                        medicalConditions: '',
+                        availability: true,
+                        emergencyContact: true,
+                        notifications: true,
+                        registrationDate: '2024-01-15T00:00:00.000Z',
+                        donationCount: 7,
+                        lastActive: new Date().toISOString()
+                    },
+                    {
+                        id: '5',
+                        fullName: 'David Wilson',
+                        bloodGroup: 'O-',
+                        phone: '+1-555-0105',
+                        email: 'david.wilson@email.com',
+                        age: 35,
+                        gender: 'Male',
+                        city: 'Phoenix',
+                        state: 'AZ',
+                        weight: 85,
+                        lastDonation: '2024-02-28',
+                        medicalConditions: '',
+                        availability: true,
+                        emergencyContact: true,
+                        notifications: true,
+                        registrationDate: '2024-01-20T00:00:00.000Z',
+                        donationCount: 12,
+                        lastActive: new Date().toISOString()
+                    },
+                    {
+                        id: '6',
+                        fullName: 'Lisa Anderson',
+                        bloodGroup: 'A-',
+                        phone: '+1-555-0106',
+                        email: 'lisa.anderson@email.com',
+                        age: 27,
+                        gender: 'Female',
+                        city: 'Philadelphia',
+                        state: 'PA',
+                        weight: 62,
+                        lastDonation: '2024-01-30',
+                        medicalConditions: '',
+                        availability: false,
+                        emergencyContact: false,
+                        notifications: true,
+                        registrationDate: '2024-01-10T00:00:00.000Z',
+                        donationCount: 2,
+                        lastActive: new Date().toISOString()
+                    }
+                ];
+
+                donors = sampleDonors;
+                saveData();
+
+                // Add some sample emergency requests
+                const sampleRequests = [
+                    {
+                        id: 'req1',
+                        patientName: 'Robert Martinez',
+                        bloodGroupNeeded: 'O-',
+                        unitsNeeded: 2,
+                        hospital: 'City General Hospital',
+                        contactPerson: 'Dr. Smith',
+                        contactPhone: '+1-555-HOSPITAL',
+                        city: 'New York',
+                        urgencyLevel: 'Critical',
+                        additionalDetails: 'Patient in ICU, surgery scheduled for tonight',
+                        requestDate: new Date().toISOString(),
+                        status: 'Active'
+                    }
+                ];
+
+                emergencyRequests = sampleRequests;
+                saveData();
+
+                addActivity('Sample data loaded for demonstration');
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // Alt + number keys for quick navigation
+            if (e.altKey) {
+                switch (e.key) {
+                    case '1':
+                        e.preventDefault();
+                        showTab('dashboard');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        showTab('register');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        showTab('search');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        showTab('blood-bank');
+                        break;
+                    case '5':
+                        e.preventDefault();
+                        showTab('emergency');
+                        break;
+                    case '6':
+                        e.preventDefault();
+                        showTab('profile');
+                        break;
+                }
+            }
+
+            // Escape key to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Click outside modal to close
+        window.onclick = function (event) {
+            const modal = document.getElementById('request-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Auto-save form data as user types (for better UX)
+        function setupAutoSave() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('input', function () {
+                        const formId = form.id;
+                        const formData = new FormData(form);
+                        const data = {};
+                        for (let [key, value] of formData.entries()) {
+                            data[key] = value;
+                        }
+                        localStorage.setItem(`lifesaver_draft_${formId}`, JSON.stringify(data));
+                    });
+                });
+            });
+        }
+
+        // Load draft form data
+        function loadDraftData() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const formId = form.id;
+                const draftData = localStorage.getItem(`lifesaver_draft_${formId}`);
+                if (draftData) {
+                    const data = JSON.parse(draftData);
+                    Object.keys(data).forEach(key => {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            if (input.type === 'checkbox') {
+                                input.checked = data[key] === 'on';
+                            } else {
+                                input.value = data[key];
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Clear draft data after successful submission
+        function clearDraftData(formId) {
+            localStorage.removeItem(`lifesaver_draft_${formId}`);
+        }
+
+        // Blood compatibility checker
+        function getCompatibleDonors(neededBloodType) {
+            const compatibility = {
+                'A+': ['A+', 'A-', 'O+', 'O-'],
+                'A-': ['A-', 'O-'],
+                'B+': ['B+', 'B-', 'O+', 'O-'],
+                'B-': ['B-', 'O-'],
+                'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+                'AB-': ['A-', 'B-', 'AB-', 'O-'],
+                'O+': ['O+', 'O-'],
+                'O-': ['O-']
+            };
+
+            const compatibleTypes = compatibility[neededBloodType] || [];
+            return donors.filter(donor => compatibleTypes.includes(donor.bloodGroup));
+        }
+
+        // Enhanced search with blood compatibility
+        function searchCompatibleDonors() {
+            const neededBloodType = document.getElementById('search-blood-group').value;
+            if (!neededBloodType) {
+                alert('Please select a blood type to find compatible donors.');
+                return;
+            }
+
+            const compatibleDonors = getCompatibleDonors(neededBloodType);
+            const city = document.getElementById('search-city').value.toLowerCase().trim();
+
+            let filteredDonors = compatibleDonors;
+
+            if (city) {
+                filteredDonors = filteredDonors.filter(donor =>
+                    donor.city.toLowerCase().includes(city)
+                );
+            }
+
+            displaySearchResults(filteredDonors);
+            addActivity(`Compatible donor search: ${filteredDonors.length} donors found for ${neededBloodType}`);
+        }
+
+        // Notification system (simulation)
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                border-left: 4px solid var(--${type === 'success' ? 'success' : type === 'error' ? 'primary' : 'info'}-color);
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: var(--shadow-lg);
+                z-index: 1001;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+
+            notification.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                    <div>${escapeHtml(message)}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #6b7280;">×</button>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Add CSS for notification animation
+        const notificationStyles = document.createElement('style');
+        notificationStyles.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(notificationStyles);
+
+        // Periodic data refresh (every 5 minutes)
+        setInterval(() => {
+            updateInventory();
+            addActivity('System: Automatic data refresh');
+        }, 300000); // 5 minutes
+
+        // Initialize auto-save and load draft data
+        setTimeout(() => {
+            setupAutoSave();
+            loadDraftData();
+        }, 1000);
+
+        // Add success callbacks to forms
+        document.getElementById('donor-form').addEventListener('submit', function (e) {
+            // Clear draft data on successful submission
+            setTimeout(() => {
+                clearDraftData('donor-form');
+            }, 100);
+        });
+
+        document.getElementById('emergency-form').addEventListener('submit', function (e) {
+            // Clear draft data on successful submission
+            setTimeout(() => {
+                clearDraftData('emergency-form');
+            }, 100);
+        });
+
+        // Print functionality
+        function printDonorList() {
+            const printWindow = window.open('', '_blank');
+            const donorList = donors.map(donor => `
+                ${donor.fullName} (${donor.bloodGroup})
+                Phone: ${donor.phone}
+                Location: ${donor.city}${donor.state ? ', ' + donor.state : ''}
+                Available: ${donor.availability ? 'Yes' : 'No'}
+                Emergency Contact: ${donor.emergencyContact ? 'Yes' : 'No'}
+                ---
+            `).join('\n');
+
+            printWindow.document.write(`
+                <html>
+                    <head><title>Blood Donor List - LifeSaver</title></head>
+                    <body>
+                        <h1>Blood Donor List</h1>
+                        <p>Generated on: ${new Date().toLocaleString()}</p>
+                        <pre>${donorList}</pre>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Add help tooltips
+        function addTooltips() {
+            const tooltips = {
+                'fullName': 'Enter your complete legal name as it appears on your ID',
+                'bloodGroup': 'Select your blood type. If unsure, consult your doctor',
+                'phone': 'Enter a phone number where you can be reached for donation requests',
+                'age': 'You must be between 18-65 years old to donate blood',
+                'weight': 'Minimum weight requirement is 50kg for blood donation safety',
+                'lastDonation': 'You must wait at least 3 months between blood donations'
+            };
+
+            Object.keys(tooltips).forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.title = tooltips[fieldName];
+                }
+            });
+        }
+
+        // Initialize tooltips
+        setTimeout(addTooltips, 500);
+
+        // Service Worker registration for offline functionality (if needed)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                // Service worker would be registered here for offline functionality
+                console.log('LifeSaver app loaded successfully');
+            });
+        }
+
+        // Final initialization
+        console.log('LifeSaver Blood Donor Management System initialized');
+        console.log('Use Alt+1-6 for quick navigation between tabs');
+    </script>
+</body>
+
+</html>
